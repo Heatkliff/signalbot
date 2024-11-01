@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Статус Задачи и Последние Сигналы</title>
+    <!-- Подключение Bootstrap CSS через CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Статус Регулярной Задачи</h1>
+
+        <!-- Статус задачи -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Текущий статус:</h5>
+                <p class="card-text">
+                    <strong>Статус:</strong> {{ task_status }}<br>
+                    <strong>Последний запуск:</strong> {{ last_run|date:"Y-m-d H:i:s" }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Последние 50 сигналов -->
+        <h2 class="mb-3">Последние 50 отправленных сигналов</h2>
+        <ul class="list-group">
+            {% for signal in recent_signals %}
+                <li class="list-group-item">
+                    <span class="text-muted">{{ signal.timestamp|date:"Y-m-d H:i:s" }}</span> -
+                    {{ signal.message_text }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Подключение Bootstrap JS и зависимостей (опционально) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
