@@ -27,7 +27,8 @@
         <ul class="list-group">
             {% for signal in recent_signals %}
                 <li class="list-group-item">
-                    <span class="text-muted">{{ signal.timestamp|date:"Y-m-d H:i:s" }}</span> -
+                    <span class="text-muted">{{ signal.timestamp|date:"Y-m-d H:i:s" }}</span>
+                    <span>| {{signal.trader_name}} |</span> -
                     {{ signal.message_text }}
                 </li>
             {% endfor %}

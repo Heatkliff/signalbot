@@ -16,6 +16,7 @@ class TelegramChannel(models.Model):
 
 
 class SentMessage(models.Model):
+    trader_name = models.CharField(max_length=255, default=" ")
     message_text = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

@@ -25,4 +25,4 @@ class TelegramChannelAdmin(admin.ModelAdmin):
 
 @admin.register(SentMessage)
 class SentMessageAdmin(admin.ModelAdmin):
-    list_display = ('message_text', 'timestamp')
+    list_display = ('trader_name', 'message_text', 'timestamp')
