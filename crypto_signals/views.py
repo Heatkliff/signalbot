@@ -7,7 +7,7 @@ from datetime import datetime
 def home_view(request):
     # Получаем статус задачи
     task = Task.objects.filter(task_name='crypto_signals.tasks.collect_and_send_signals').first()
-    data_log = DataCollectionLog.objects.first()
+    data_log = DataCollectionLog.objects.last()
     task_status = 'Не запланирована'
     last_run = None
     if task:
