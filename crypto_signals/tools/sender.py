@@ -33,7 +33,7 @@ class SignalBot:
                     if remaked_signal.get(
                             "entry") is not None: new_text += f"Точка входа: {remaked_signal.get('entry')}\n"
                     if remaked_signal.get(
-                            "targets") is not None:
+                            "targets") is not None and len(remaked_signal["targets"]) > 0:
                         targets = " ".join(remaked_signal.get('targets'))
                         new_text += f"Цели: {targets} \n"
                     if remaked_signal.get(
