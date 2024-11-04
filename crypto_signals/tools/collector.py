@@ -4,7 +4,7 @@ import asyncio
 from telethon import TelegramClient
 from telethon.tl.functions.messages import GetHistoryRequest
 from datetime import datetime, timedelta, timezone
-from .models import TelegramConfig, TelegramChannel
+from crypto_signals.models import TelegramConfig, TelegramChannel
 from asgiref.sync import sync_to_async  # Добавляем этот импорт
 
 

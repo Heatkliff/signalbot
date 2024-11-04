@@ -1,9 +1,7 @@
-import asyncio
 import logging
-from asgiref.sync import sync_to_async
 from background_task import background
-from .collector import TelegramSignalScraper
-from .sender import SignalBot
+from crypto_signals.tools.collector import TelegramSignalScraper
+from crypto_signals.tools.sender import SignalBot
 from .models import DataCollectionLog, TelegramConfig
 
 # Настройка логирования

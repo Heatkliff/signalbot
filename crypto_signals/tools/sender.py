@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
 from telegram import Bot
-from .models import SentMessage
+from crypto_signals.models import SentMessage
 import os
 
 

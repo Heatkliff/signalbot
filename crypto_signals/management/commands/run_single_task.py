@@ -1,11 +1,7 @@
 from django.core.management.base import BaseCommand
-from crypto_signals.tasks import collect_and_send_signals
-import asyncio
 import logging
-from asgiref.sync import sync_to_async
-from background_task import background
-from crypto_signals.collector import TelegramSignalScraper
-from crypto_signals.sender import SignalBot
+from crypto_signals.tools.collector import TelegramSignalScraper
+from crypto_signals.tools.sender import SignalBot
 from crypto_signals.models import DataCollectionLog, TelegramConfig
 
 
