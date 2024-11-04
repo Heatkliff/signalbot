@@ -34,9 +34,12 @@ class DataCollectionLog(models.Model):
 
 
 class Signal(models.Model):
-    trader = models.CharField(max_length=100)  # Имя трейдера, отправившего сигнал
-    signal_text = models.TextField()  # Текст сигнала
+    currency = models.CharField(max_length=50, blank=True, null=True)  # Валюта, по которой дается сигнал
+    direction = models.CharField(max_length=50, blank=True, null=True)  # Направление сделки (текстовое поле)  # Направление сделки (покупка/продажа)
+    entry = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)  # Уровень входа
+    targets = models.JSONField(blank=True, null=True)  # Цели, можно использовать JSON для хранения списка значений
+    stop_loss = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)  # Стоп-лосс
     timestamp = models.DateTimeField(auto_now_add=True)  # Время, когда сигнал был создан
 
     def __str__(self):
-        return f"{self.trader}: {self.signal_text[:50]}... ({self.timestamp})"
+        return f"{self.currency} ({self.direction}) at {self.entry} ({self.timestamp})"

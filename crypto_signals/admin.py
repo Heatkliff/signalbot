@@ -27,9 +27,9 @@ class TelegramChannelAdmin(admin.ModelAdmin):
 class SentMessageAdmin(admin.ModelAdmin):
     list_display = ('trader_name', 'message_text', 'timestamp')
 
-
 @admin.register(Signal)
 class SignalAdmin(admin.ModelAdmin):
-    list_display = ('trader', 'timestamp', 'signal_text')  # Отображение полей в админке
-    search_fields = ('trader', 'signal_text')  # Возможность поиска по трейдеру и тексту сигнала
-    list_filter = ('trader', 'timestamp')  # Фильтры для удобства работы
+    list_display = ('currency', 'direction', 'entry', 'timestamp')  # Отображение полей в админке
+    search_fields = ('currency', 'direction')  # Возможность поиска по валюте и направлению
+    list_filter = ('currency', 'direction', 'timestamp')  # Фильтры для удобства работы
+
