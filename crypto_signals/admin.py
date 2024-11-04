@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import TelegramConfig, TelegramChannel, SentMessage
+from .models import TelegramConfig, TelegramChannel, SentMessage, Signal
 from .models import DataCollectionLog
 
 
@@ -26,3 +26,10 @@ class TelegramChannelAdmin(admin.ModelAdmin):
 @admin.register(SentMessage)
 class SentMessageAdmin(admin.ModelAdmin):
     list_display = ('trader_name', 'message_text', 'timestamp')
+
+
+@admin.register(Signal)
+class SignalAdmin(admin.ModelAdmin):
+    list_display = ('trader', 'timestamp', 'signal_text')  # Отображение полей в админке
+    search_fields = ('trader', 'signal_text')  # Возможность поиска по трейдеру и тексту сигнала
+    list_filter = ('trader', 'timestamp')  # Фильтры для удобства работы

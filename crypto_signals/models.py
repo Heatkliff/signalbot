@@ -31,3 +31,12 @@ class DataCollectionLog(models.Model):
 
     def __str__(self):
         return f"Log at {self.timestamp}: {self.signals_count} signals, {self.info_count} info messages"
+
+
+class Signal(models.Model):
+    trader = models.CharField(max_length=100)  # Имя трейдера, отправившего сигнал
+    signal_text = models.TextField()  # Текст сигнала
+    timestamp = models.DateTimeField(auto_now_add=True)  # Время, когда сигнал был создан
+
+    def __str__(self):
+        return f"{self.trader}: {self.signal_text[:50]}... ({self.timestamp})"
