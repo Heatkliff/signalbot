@@ -33,7 +33,9 @@ class SignalBot:
                     if remaked_signal.get(
                             "entry") is not None: new_text += f"Точка входа: {remaked_signal.get('entry')}\n"
                     if remaked_signal.get(
-                            "targets") is not None: new_text += f"Цели: {" ".join(remaked_signal.get('targets'))}\n"
+                            "targets") is not None:
+                        targets = " ".join(remaked_signal.get('targets'))
+                        new_text += f"Цели: {targets} \n"
                     if remaked_signal.get(
                             "stop_loss") is not None: new_text += f"Stop loss: {remaked_signal.get('stop_loss')}\n"
                     new_text += (f"Сообщение трейдера: \n {message[1]}\n"
