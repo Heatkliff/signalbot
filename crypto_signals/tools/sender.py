@@ -39,7 +39,7 @@ class SignalBot:
                     if remaked_signal.get(
                             "stop_loss") is not None: new_text += f"Stop loss: {remaked_signal.get('stop_loss')}\n"
                     new_text += (f"Сообщение трейдера: \n {message[1]}\n"
-                                 f"Открыть сделку https://swap.bingx.com/uk-ua/{remaked_signal.get("currency")}\n")
+                                 f"Открыть сделку https://swap.bingx.com/uk-ua/{remaked_signal.get("currency")} \n")
                     await self.bot.send_message(chat_id=self.chat_id, text=new_text, parse_mode='HTML')
                     await SentMessage.objects.acreate(message_text=message[1], trader_name={message[0]})
                 else:
