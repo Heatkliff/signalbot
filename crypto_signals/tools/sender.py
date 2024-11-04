@@ -28,7 +28,7 @@ class SignalBot:
                 # remaked_signal = remake_signal(message[0], message[1])
                 if remaked_signal:
                     new_text = (f"Трейдер :{message[0]}\n"
-                                f"Монета :{remaked_signal.get("currency")}\n"
+                                f"Монета :{remaked_signal.get('currency')}\n"
                                 f"Направление :{remaked_signal.get('direction')}\n")
                     if remaked_signal.get(
                             "entry") is not None: new_text += f"Точка входа: {remaked_signal.get('entry')}\n"
