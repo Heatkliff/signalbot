@@ -34,6 +34,7 @@ class DataCollectionLog(models.Model):
 
 
 class Signal(models.Model):
+    trader_name = models.CharField(max_length=255, default="")
     currency = models.CharField(max_length=50, blank=True, null=True)  # Валюта, по которой дается сигнал
     direction = models.CharField(max_length=50, blank=True, null=True)  # Направление сделки (текстовое поле)  # Направление сделки (покупка/продажа)
     entry = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)  # Уровень входа
