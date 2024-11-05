@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'background_task',
     'crypto_signals',  # Убедитесь, что ваше приложение также добавлено
 ]
 
