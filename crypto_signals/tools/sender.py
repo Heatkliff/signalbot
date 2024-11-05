@@ -25,7 +25,6 @@ class SignalBot:
                     # Вызов синхронной функции в отдельном потоке
                     remaked_signal = await loop.run_in_executor(executor, remake_signal, message[0], message[1])
 
-                # remaked_signal = remake_signal(message[0], message[1])
                 if remaked_signal:
                     new_text = (f"Трейдер :{message[0]}\n"
                                 f"Монета :{remaked_signal.get('currency')}\n"
@@ -38,6 +37,26 @@ class SignalBot:
                         new_text += f"Цели: {targets} \n"
                     if remaked_signal.get(
                             "stop_loss") is not None: new_text += f"Stop loss: {remaked_signal.get('stop_loss')}\n"
+                    new_text += "==========Аналитика==========\n"
+                    new_text += "\n".join(remaked_signal['text_analytic'])
+
+                    new_text += "\n=========Рекомендации========\n"
+                    recomendation_indicator = remaked_signal['ema'] + remaked_signal['st'] + remaked_signal['macd'] + \
+                                              remaked_signal['rsi'] + remaked_signal['stoch']
+                    if remaked_signal.get(
+                            "direction") == "SHORT": recomendation_indicator = recomendation_indicator * -1
+
+                    if recomendation_indicator < -2:
+                        new_text += "❌❌❌Крайне низкая вероятность отработки❌❌❌ \n"
+                    elif -2 <= recomendation_indicator < 2:
+                        new_text += "⚠️⚠️⚠️Низкая вероятность отработки⚠️⚠️⚠️ \n"
+                    elif 2 <= recomendation_indicator < 4:
+                        new_text += "✅✅✅Высокая вероятность отработки✅✅✅ \n"
+                    elif recomendation_indicator >= 4:
+                        new_text += "💰💰💰Крайне высокая вероятность отработки💰💰💰 \n"
+                    new_text += (
+                        f"EMA: {remaked_signal['ema']}, ST: {remaked_signal['st']}, MACD: {remaked_signal['macd']},"
+                        f" RSI: {remaked_signal['rsi']}, STOCH: {remaked_signal['stoch']}, INDICATOR: {recomendation_indicator}\n")
 
                     features_link = "https://swap.bingx.com/uk-ua/" + str(remaked_signal.get("currency"))
                     new_text += (f"Сообщение трейдера: \n {message[1]}\n"
