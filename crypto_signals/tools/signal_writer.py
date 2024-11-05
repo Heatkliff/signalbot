@@ -1,6 +1,9 @@
 import re
 import json
+import time
+
 from crypto_signals.models import Signal
+from crypto_signals.tools.analytics import BingXChart
 
 
 def parse_crypto_signal(message, trading_pairs):
@@ -95,13 +98,28 @@ def remake_signal(trader, message):
     rsignal = parse_crypto_signal(message, trading_pairs)
 
     if rsignal:
+        chart = BingXChart()
+        chart.set_interval(interval='1h')
+        dict_analysis = chart.generate_analytics(symbol=rsignal.get("currency"), hours_ago=48)
+        rsignal['ema'] = dict_analysis["logic"]['ema']
+        rsignal['st'] = dict_analysis["logic"]['st']
+        rsignal['macd'] = dict_analysis["logic"]['MACD']
+        rsignal['rsi'] = dict_analysis["logic"]['RSI']
+        rsignal['stoch'] = dict_analysis["logic"]['stoch']
+        rsignal['text_analytic'] = dict_analysis['text']
+
         signal = Signal.objects.create(
             trader_name=trader,
-            currency=rsignal.get("currency"),
-            direction=rsignal.get("direction"),
+            currency=str(rsignal.get("currency")),
+            direction=str(rsignal.get("direction")),
             entry=rsignal.get("entry"),
             targets=rsignal.get("targets"),
-            stop_loss=rsignal.get("stop_loss")
+            stop_loss=rsignal.get("stop_loss"),
+            ema=rsignal['ema'],
+            st=rsignal['st'],
+            macd=rsignal['macd'],
+            rsi=rsignal['rsi'],
+            stoch=rsignal['stoch']
         )
 
         # Сохранение объекта в базе данных
