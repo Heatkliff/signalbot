@@ -307,24 +307,3 @@ class BingXChart:
                 self.plot_chart(df, symbol)
         except ValueError as e:
             print(e)
-
-
-# Пример использования
-if __name__ == "__main__":
-    chart = BingXChart()
-    symbols = chart.fetch_symbols()
-    print(f"Доступные торговые пары: {', '.join(symbols)}")
-
-    # Задаем интервал для графиков
-    chart.set_interval(interval='15m')
-
-    # Получаем данные аналитики
-    dict_analysis = chart.generate_analytics(symbol='PHB-USDT', hours_ago=48)
-    print(dict_analysis['text'])  # ответ в текстовом формате
-    print(dict_analysis['logic'])  # ответ в логическом формате где -1 вниз а 1 вверх
-
-    # Генерируем один график по указанному символу
-    # chart.generate_chart(symbol='MASK-USDT', hours_ago=48)
-
-    # Генерируем все графики по очереди
-    # chart.generate_all_charts(hours_ago=24)
