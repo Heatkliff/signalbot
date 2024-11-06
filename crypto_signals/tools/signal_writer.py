@@ -51,6 +51,8 @@ def parse_crypto_signal(message, trading_pairs):
 
     # Проверка, если валюта и направление найдены, возвращаем сигнал
     if signal["currency"] and signal["direction"]:
+        if signal['entry'] is not None: signal['entry'] = float(str(signal['entry']).replace(",", "."))
+        if signal['stop_loss'] is not None: signal['stop_loss'] = float(str(signal['stop_loss']).replace(",", "."))
         return signal
     else:
         print(f"No complete match found for message")  # Отладочный вывод при отсутствии совпадения
