@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    os.environ["OPENBLAS_NUM_THREADS"] = "2"
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AlienSignalsBot.settings')
     try:
