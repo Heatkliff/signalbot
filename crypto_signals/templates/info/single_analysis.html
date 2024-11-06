@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Крайние полученые сигналы
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6 d-none d-md-block">
+                <h2 class="mb-4">Анализ криптовалюты на графике 1h</h2>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Общий анализ тренда</h5>
+                        <ul class="list-group">
+                            {% for text_item in text_h %}
+                                <li class="list-group-item">{{ text_item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>Логические значения показателей:</h4>
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Индикатор</th>
+                        <th>Значение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>EMA</td>
+                        <td>
+                            {% if logic_h.ema == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.ema == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>SuperTrend</td>
+                        <td>
+                            {% if logic_h.st == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.st == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MACD</td>
+                        <td>
+                            {% if logic_h.MACD == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.MACD == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>RSI</td>
+                        <td>
+                            {% if logic_h.RSI == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.RSI == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Стохастик</td>
+                        <td>
+                            {% if logic_h.stoch == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.stoch == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4">Анализ криптовалюты на графике 15m</h2>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Общий анализ тренда</h5>
+                        <ul class="list-group">
+                            {% for text_item in text %}
+                                <li class="list-group-item">{{ text_item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>Логические значения показателей:</h4>
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Индикатор</th>
+                        <th>Значение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>EMA</td>
+                        <td>
+                            {% if logic.ema == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.ema == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>SuperTrend</td>
+                        <td>
+                            {% if logic.st == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.st == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MACD</td>
+                        <td>
+                            {% if logic.MACD == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.MACD == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>RSI</td>
+                        <td>
+                            {% if logic.RSI == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.RSI == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Стохастик</td>
+                        <td>
+                            {% if logic.stoch == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.stoch == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" style="height: 600px">
+            <!-- TradingView Widget BEGIN -->
+            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+
+            <div class="thirds-row" style="width: 100%">
+                <script type="text/javascript">
+                    new TradingView.widget({
+                        "container_id": 'technical-analysis',
+                        "autosize": true,
+                        "symbol": "{{symbol}}",
+                        "interval": "D",
+                        "timezone": "exchange",
+                        "theme": "White",
+                        "style": "1",
+                        "toolbar_bg": "#f1f3f6",
+                        "withdateranges": true,
+                        "hide_side_toolbar": false,
+                        "allow_symbol_change": false,
+                        "save_image": false,
+                        "hideideas": true,
+                        "studies": ["ROC@tv-basicstudies",
+                            "StochasticRSI@tv-basicstudies",
+                            "MASimple@tv-basicstudies"],
+                        "show_popup_button": true,
+                        "popup_width": "1000",
+                        "popup_height": "650"
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import SentMessage, DataCollectionLog, MarketAnalysis
 from datetime import datetime
 from django.http import JsonResponse
+from crypto_signals.tools.analytics import BingXChart
 
 
 def home_view(request):
@@ -75,3 +76,22 @@ def market_analysis_view(request):
     crypto_data.sort(key=lambda x: x['sort_priority'])
 
     return render(request, 'info/market_analysis.html', {'crypto_data': crypto_data})
+
+
+def get_market_currency_info(request, currency):
+    result = {}
+    symbol = currency.upper()
+    chart = BingXChart()
+    symbols = chart.fetch_symbols()
+    chart.set_interval(interval='15m')
+    if symbol in symbols:
+        dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
+        result['symbol'] = symbol
+        result['text'] = dict_analysis['text']
+        result['logic'] = dict_analysis['logic']
+        chart.set_interval(interval='1h')
+        dict_analysis_hour = chart.generate_analytics(symbol=symbol, hours_ago=48)
+        result['text_h'] = dict_analysis_hour['text']
+        result['logic_h'] = dict_analysis_hour['logic']
+
+        return render(request, 'info/single_analysis.html', result)

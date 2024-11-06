@@ -5,36 +5,38 @@
 {% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <h2 class="mb-4">Анализ рынка криптовалют</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="thead-dark">
-            <tr>
-                <th>Валюта</th>
-                <th class="desktop-only">EMA</th>
-                <th class="desktop-only">SuperTrend</th>
-                <th class="desktop-only">MACD</th>
-                <th class="desktop-only">RSI</th>
-                <th class="desktop-only">Стохастик</th>
-                <th>Ожидаемый результат</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for crypto in crypto_data %}
+    <div class="container my-4">
+        <h2 class="mb-4">Анализ рынка криптовалют</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
                 <tr>
-                    <td>{{ crypto.name }}</td>
-                    <td class="desktop-only">{{ crypto.ema }}</td>
-                    <td class="desktop-only">{{ crypto.st }}</td>
-                    <td class="desktop-only">{{ crypto.macd }}</td>
-                    <td class="desktop-only">{{ crypto.rsi }}</td>
-                    <td class="desktop-only">{{ crypto.stoch }}</td>
-                    <td class="{{ crypto.result_class }}">{{ crypto.expected_result }}</td>
+                    <th>Валюта</th>
+                    <th class="desktop-only">EMA</th>
+                    <th class="desktop-only">SuperTrend</th>
+                    <th class="desktop-only">MACD</th>
+                    <th class="desktop-only">RSI</th>
+                    <th class="desktop-only">Стохастик</th>
+                    <th>Ожидаемый результат</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for crypto in crypto_data %}
+
+                    <tr>
+                        <td>{{ crypto.name }}</td>
+                        <td class="desktop-only">{{ crypto.ema }}</td>
+                        <td class="desktop-only">{{ crypto.st }}</td>
+                        <td class="desktop-only">{{ crypto.macd }}</td>
+                        <td class="desktop-only">{{ crypto.rsi }}</td>
+                        <td class="desktop-only">{{ crypto.stoch }}</td>
+                        <td class="{{ crypto.result_class }}">{{ crypto.expected_result }}</td>
+                        <td><a href="/status_market/{{ crypto.name }}">Детальнее</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
 {% endblock %}
