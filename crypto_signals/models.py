@@ -50,3 +50,12 @@ class Signal(models.Model):
 
     def __str__(self):
         return f"{self.currency} ({self.direction}) at {self.entry} ({self.timestamp})"
+
+
+# Модель для аналитики рынка
+class MarketAnalysis(models.Model):
+    time = models.DateTimeField(auto_now_add=True)  # Время создания записи
+    crypto_data = models.JSONField()  # Список криптовалют с аналитикой
+
+    def __str__(self):
+        return f"Market Analysis at {self.time}"
