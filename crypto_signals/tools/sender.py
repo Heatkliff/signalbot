@@ -39,12 +39,14 @@ class SignalBot:
                     if remaked_signal.get(
                             "stop_loss") is not None: new_text += f"Stop loss: {remaked_signal.get('stop_loss')}\n"
                     new_text += "==========Аналитика==========\n"
+                    recomendation_indicator = remaked_signal['ema'] + remaked_signal['st'] + remaked_signal['macd'] + \
+                                              remaked_signal['rsi'] + remaked_signal['stoch']
+                    if direction == "SHORT": recomendation_indicator = recomendation_indicator * -1
                     new_text += (
                         f"\n EMA: {remaked_signal['ema']}, ST: {remaked_signal['st']}, MACD: {remaked_signal['macd']},"
                         f" RSI: {remaked_signal['rsi']}, STOCH: {remaked_signal['stoch']}, INDICATOR: {recomendation_indicator}\n")
                     new_text += f"\n http://crypto-alien-bot.pp.ua/status_market/{message[0].upper()}\n"
                     new_text += "\n=========Рекомендации========\n"
-                    if direction == "SHORT": recomendation_indicator = recomendation_indicator * -1
 
                     if recomendation_indicator < -2:
                         new_text += "❌❌❌Крайне низкая вероятность отработки❌❌❌ \n"
