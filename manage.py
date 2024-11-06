@@ -7,6 +7,7 @@ import sys
 def main():
     os.environ['OMP_NUM_THREADS'] = '2'  # Ограничение количества потоков для OpenMP
     os.environ["OPENBLAS_NUM_THREADS"] = "2"
+    os.environ["RLIMIT_NPROC"] = "10"
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AlienSignalsBot.settings')
     try:
