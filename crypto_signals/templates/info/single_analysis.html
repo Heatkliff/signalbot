@@ -7,6 +7,11 @@
 {% block content %}
     <div class="container">
         <div class="row">
+            <div class="col-md-4 {{ analysis_1h.result_class }}">{{ analysis_1h.result }} на графике 1h</div>
+            <div class="col-md-4 {{ analysis.result_class }}">{{ analysis.result }} на графике 15m</div>
+            <div class="col-md-4 {{ analysis_5m.result_class }}">{{ analysis_5m.result }} на графике 5m</div>
+        </div>
+        <div class="row">
             <div class="col-md-4 d-none d-md-block">
                 <h2 class="mb-4">Анализ {{ symbol }} на графике 1h</h2>
 
