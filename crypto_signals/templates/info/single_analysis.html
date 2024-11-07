@@ -31,6 +31,11 @@
                     </thead>
                     <tbody>
                     <tr>
+                        <td>Ожидаемо</td>
+                        <td class="{{ analysis_1h.result_class }}">{{ analysis_1h.result }}</td>
+                    </tr>
+
+                    <tr>
                         <td>EMA</td>
                         <td>
                             {% if logic_h.ema == 1 %}
@@ -117,6 +122,10 @@
                     </thead>
                     <tbody>
                     <tr>
+                        <td>Ожидаемо</td>
+                        <td class="{{ analysis.result_class }}">{{ analysis.result }}</td>
+                    </tr>
+                    <tr>
                         <td>EMA</td>
                         <td>
                             {% if logic.ema == 1 %}
@@ -202,6 +211,10 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <tr>
+                        <td>Ожидаемо</td>
+                        <td class="{{ analysis_5m.result_class }}">{{ analysis_5m.result }}</td>
+                    </tr>
                     <tr>
                         <td>EMA</td>
                         <td>

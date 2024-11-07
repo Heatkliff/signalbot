@@ -3,6 +3,7 @@ from .models import SentMessage, DataCollectionLog, MarketAnalysis
 from datetime import datetime
 from django.http import JsonResponse
 from crypto_signals.tools.analytics import BingXChart
+from crypto_signals.tools.web_tools import price_direction
 
 
 def home_view(request):
@@ -87,18 +88,21 @@ def get_market_currency_info(request, currency):
         result['symbol'] = symbol.replace('-', '')
 
         chart.set_interval(interval='5m')
-        dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
-        result['text_5m'] = dict_analysis['text']
-        result['logic_5m'] = dict_analysis['logic']
+        dict_analysis_5m = chart.generate_analytics(symbol=symbol, hours_ago=48)
+        result['text_5m'] = dict_analysis_5m['text']
+        result['logic_5m'] = dict_analysis_5m['logic']
+        result['analysis_5m'] = price_direction(dict_analysis_5m['logic'])
 
         chart.set_interval(interval='15m')
         dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
         result['text'] = dict_analysis['text']
         result['logic'] = dict_analysis['logic']
+        result['analysis'] = price_direction(dict_analysis['logic'])
 
         chart.set_interval(interval='1h')
         dict_analysis_hour = chart.generate_analytics(symbol=symbol, hours_ago=48)
         result['text_h'] = dict_analysis_hour['text']
         result['logic_h'] = dict_analysis_hour['logic']
+        result['analysis_1h'] = price_direction(dict_analysis_hour['logic'])
 
         return render(request, 'info/single_analysis.html', result)
