@@ -45,7 +45,7 @@ class SignalBot:
                     new_text += (
                         f"\n EMA: {remaked_signal['ema']}, ST: {remaked_signal['st']}, MACD: {remaked_signal['macd']},"
                         f" RSI: {remaked_signal['rsi']}, STOCH: {remaked_signal['stoch']}, INDICATOR: {recomendation_indicator}\n")
-                    new_text += f"\n http://crypto-alien-bot.pp.ua/status_market/{message[0].upper()}\n"
+                    new_text += f"\n http://crypto-alien-bot.pp.ua/status_market/{str(remaked_signal.get('currency')).upper()}\n"
                     new_text += "\n=========Рекомендации========\n"
 
                     if recomendation_indicator < -2:
