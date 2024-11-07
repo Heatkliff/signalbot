@@ -266,6 +266,8 @@ class BingXChart:
 
     def generate_analytics(self, symbol, hours_ago=24):
         try:
+            self.last_analytics = {}
+
             if not self.interval:
                 raise ValueError(
                     "Пожалуйста, используйте метод set_interval(interval), чтобы задать интервал перед генерацией графика.")
