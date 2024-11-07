@@ -5,18 +5,18 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container my-4" style="max-width: 100%">
+    <div class="container mt-4">
         <h2 class="mb-4">Анализ рынка криптовалют</h2>
         <div class="table">
-            <table class="table table-bordered table-hover" style="max-width: 100%">
+            <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                 <tr>
                     <th>Валюта</th>
-                    <th class="d-none d-md-block">EMA</th>
-                    <th class="d-none d-md-block">SuperTrend</th>
-                    <th class="d-none d-md-block">MACD</th>
-                    <th class="d-none d-md-block">RSI</th>
-                    <th class="d-none d-md-block">Стохастик</th>
+                    <th class="d-none d-md-table-cell">EMA</th>
+                    <th class="d-none d-md-table-cell">SuperTrend</th>
+                    <th class="d-none d-md-table-cell">MACD</th>
+                    <th class="d-none d-md-table-cell">RSI</th>
+                    <th class="d-none d-md-table-cell">Стохастик</th>
                     <th>Ожидаемый результат</th>
                 </tr>
                 </thead>
@@ -27,11 +27,11 @@
                             <a href="#" data-toggle="modal" data-target="#cryptoModal{{ forloop.counter }}"
                                onclick="document.getElementById('cryptoFrame{{ forloop.counter }}').src='/status_market/{{ crypto.name }}'; return false;">{{ crypto.name }}</a>
                         </td>
-                        <td class="d-none d-md-block">{{ crypto.ema }}</td>
-                        <td class="d-none d-md-block">{{ crypto.st }}</td>
-                        <td class="d-none d-md-block">{{ crypto.macd }}</td>
-                        <td class="d-none d-md-block">{{ crypto.rsi }}</td>
-                        <td class="d-none d-md-block">{{ crypto.stoch }}</td>
+                        <td class="d-none d-md-table-cell">{{ crypto.ema }}</td>
+                        <td class="d-none d-md-table-cell">{{ crypto.st }}</td>
+                        <td class="d-none d-md-table-cell">{{ crypto.macd }}</td>
+                        <td class="d-none d-md-table-cell">{{ crypto.rsi }}</td>
+                        <td class="d-none d-md-table-cell">{{ crypto.stoch }}</td>
                         <td class="{{ crypto.result_class }}">{{ crypto.expected_result }}</td>
                         <td><a href="/status_market/{{ crypto.name }}">Детальнее</a></td>
                     </tr>
