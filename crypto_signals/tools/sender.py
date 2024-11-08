@@ -14,6 +14,9 @@ class SignalBot:
         self.chat_id = config.chat_id
         self.bot = Bot(token=self.token)
 
+    async def send_message(self, message):
+        await self.bot.send_message(chat_id=self.chat_id, text=message, parse_mode='HTML')
+
     async def send_messages(self, messages):
         for message in messages:
             local_time = message[2].astimezone(timezone(timedelta(hours=2)))
