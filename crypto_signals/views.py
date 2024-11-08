@@ -1,9 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import SentMessage, DataCollectionLog, MarketAnalysis
 from datetime import datetime
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from crypto_signals.tools.analytics import BingXChart
 from crypto_signals.tools.web_tools import price_direction
+from django.utils import timezone
+from django.core.cache import cache
+from django.http import HttpResponseForbidden
+import subprocess
+import sys
+
 
 
 def home_view(request):
@@ -106,3 +112,25 @@ def get_market_currency_info(request, currency):
         result['analysis_1h'] = price_direction(dict_analysis_hour['logic'])
 
         return render(request, 'info/single_analysis.html', result)
+
+
+def web_generate_signal(request):
+    if request.method == 'POST':
+        # Ограничение выполнения команды раз в 10 минут
+        last_run_time = cache.get('last_run_command_time')
+        if last_run_time and (timezone.now() - last_run_time).total_seconds() < 600:
+            return HttpResponseForbidden("Эту команду можно запускать только раз в 10 минут.")
+
+        # Здесь разместите код для выполнения вашей команды
+        try:
+            result = subprocess.run([sys.executable, 'manage.py', 'create_signals'], capture_output=True, text=True, check=True)
+            output = result.stdout
+        except subprocess.CalledProcessError as e:
+            output = f"Ошибка при выполнении команды: {e.stderr}"
+        return HttpResponse(f"Команда выполнена: <pre>{output}</pre>")
+
+        # Сохранить время последнего выполнения
+        cache.set('last_run_command_time', timezone.now(), timeout=600)
+
+        return redirect('some_view_name')  # Вернуться на нужную страницу
+    return HttpResponseForbidden("Неправильный метод запроса.")

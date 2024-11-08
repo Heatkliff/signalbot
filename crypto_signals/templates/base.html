@@ -20,10 +20,18 @@
                 <a class="nav-link" href="/">Главная</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/status_market/">Анализ рынка</a>
+                <a class="nav-link" href="/market-analysis/">Анализ рынка</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about/">О нас</a>
             </li>
         </ul>
     </div>
+    <!-- Форма для выполнения команды -->
+    <form class="form-inline my-2 my-lg-0 ml-auto" method="POST" action="{% url 'web_generate_signal' %}">
+        {% csrf_token %}
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Запустить команду</button>
+    </form>
 </nav>
 
 <div class="container mt-4">
