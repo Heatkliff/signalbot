@@ -50,8 +50,10 @@ class SignalBot:
 
                     if recomendation_indicator < -2:
                         new_text += "❌❌❌Крайне низкая вероятность отработки❌❌❌ \n"
+                        return False
                     elif -2 <= recomendation_indicator < 2:
                         new_text += "⚠️⚠️⚠️Низкая вероятность отработки⚠️⚠️⚠️ \n"
+                        return False
                     elif 2 <= recomendation_indicator < 4:
                         new_text += "✅✅✅Высокая вероятность отработки✅✅✅ \n"
                     elif recomendation_indicator >= 4:
