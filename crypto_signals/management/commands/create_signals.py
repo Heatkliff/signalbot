@@ -25,7 +25,11 @@ class Command(BaseCommand):
             chart.set_interval(interval='15m')
 
             for symbol in symbols:
-                dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=24)
+                try:
+                    dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=24)
+                except BaseException as e:
+                    print(e)
+                    continue
                 if dict_analysis['trade_signal'] != None:
                     signals.append(dict_analysis)
 
