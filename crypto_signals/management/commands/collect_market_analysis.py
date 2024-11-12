@@ -10,7 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         chart = BingXChart()
         symbols = chart.fetch_symbols()
-        chart.set_interval(interval='15m')
+        chart.set_interval(interval='1h')
         # print(f"Доступные торговые пары: {', '.join(symbols)}")
         # Задаем интервал для графиков
         crypto_list = []

@@ -22,7 +22,7 @@ class Command(BaseCommand):
             chart = BingXChart()
             symbols = chart.fetch_symbols()
 
-            chart.set_interval(interval='15m')
+            chart.set_interval(interval='1h')
 
             for symbol in symbols:
                 try:
@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 if dict_analysis['trade_signal'] != None:
                     signals.append(dict_analysis)
 
-            chart.set_interval(interval='1h')
+            chart.set_interval(interval='15m')
 
             messages = []
             for signal in signals:
@@ -46,11 +46,11 @@ class Command(BaseCommand):
 
                 if dict_analysis['trade_signal'] is not None:
                     if dict_analysis['trade_signal']['направление'] == signal['trade_signal']['направление']:
-                        message += "✅✅✅СИГНАЛ СОВПАДАЕТ С ЧАСОВЫМ✅✅✅ \n"
+                        message += "✅✅✅СИГНАЛ СОВПАДАЕТ С 15m tf✅✅✅ \n"
                     else:
-                        message += "❌❌❌СИГНАЛ НЕ СОВПАДАЕТ С ЧАСОВЫМ❌❌❌ \n"
+                        message += "❌❌❌СИГНАЛ НЕ СОВПАДАЕТ С 15m tf❌❌❌ \n"
                 else:
-                    message += "⚠️⚠️⚠️СИГНАЛ НЕ СУЩЕСТВУЕТ НА ЧАСОВОМ⚠️⚠️⚠️ \n"
+                    message += "⚠️⚠️⚠️СИГНАЛ НЕ СУЩЕСТВУЕТ НА 15m tf⚠️⚠️⚠️ \n"
 
                 message += (f"точка входа: {float(signal['trade_signal']['точка входа'])} \n"
                             f"тейк поинт: {float(signal['trade_signal']['тейк поинт'])} \n"
