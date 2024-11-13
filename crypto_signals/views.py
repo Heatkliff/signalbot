@@ -93,12 +93,6 @@ def get_market_currency_info(request, currency):
     if symbol in symbols:
         result['symbol'] = symbol.replace('-', '')
 
-        chart.set_interval(interval='5m')
-        dict_analysis_5m = chart.generate_analytics(symbol=symbol, hours_ago=48)
-        result['text_5m'] = dict_analysis_5m['text']
-        result['logic_5m'] = dict_analysis_5m['logic']
-        result['analysis_5m'] = price_direction(dict_analysis_5m['logic'])
-
         chart.set_interval(interval='15m')
         dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
         result['text'] = dict_analysis['text']
