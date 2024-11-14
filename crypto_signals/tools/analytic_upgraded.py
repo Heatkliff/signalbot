@@ -1,18 +1,20 @@
 import requests
-import time
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
 
 class BingXChart:
-    def __init__(self):
+    def __init__(self, test=False, past_hour=1):
+        self.test_mode = test
+        self.past_hour = past_hour
+        self.start_time = 0
         self.symbols_url = 'https://open-api.bingx.com/openApi/swap/v2/quote/contracts'
         self.klines_url = 'https://open-api.bingx.com/openApi/swap/v3/quote/klines'
         self.interval = None
         self.limit = 1000
         self.last_analytics = {}
+        self.df = None
 
     def fetch_symbols(self):
         response = requests.get(self.symbols_url)
@@ -26,9 +28,13 @@ class BingXChart:
         self.interval = interval
 
     def fetch_data(self, symbol, hours_ago=24):
+        if self.test_mode:
+            hours_ago += self.past_hour
+
         if not self.interval:
             raise ValueError("Интервал должен быть задан перед получением данных.")
         start_time = int((datetime.now() - timedelta(hours=hours_ago)).timestamp() * 1000)
+        self.start_time = start_time
         params = {
             'symbol': symbol,
             'interval': self.interval,
@@ -47,6 +53,9 @@ class BingXChart:
         df['time'] = pd.to_datetime(df['time'], unit='ms')
         df.set_index('time', inplace=True)
         df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
+        if self.test_mode:
+            df = df.iloc[self.past_hour:]
+        df = df.iloc[::-1]
         return df
 
     def calculate_ema(self, df, periods=[9, 21]):
@@ -60,7 +69,8 @@ class BingXChart:
         df['MACD_Signal'] = df['MACD'].ewm(span=signal_period, adjust=False).mean()
         return df
 
-    def calculate_supertrend(self, df, period=7, multiplier=3):
+    def calculate_supertrend(self, base_df, period=7, multiplier=3):
+        df = base_df.copy()
         # Расчет ATR вручную вместо использования pandas_ta
         df['TR'] = np.maximum(df['high'] - df['low'],
                               np.maximum(abs(df['high'] - df['close'].shift(1)),
@@ -110,7 +120,14 @@ class BingXChart:
             else:
                 df.at[df.index[current], 'Supertrend'] = df['upperBand'].iloc[current]
 
-        return df
+        base_df['Supertrend'] = df['Supertrend']
+        base_df['upperBand'] = df['upperBand']
+        base_df['lowerBand'] = df['lowerBand']
+        base_df['basicUpperband'] = df['basicUpperband']
+        base_df['basicLowerband'] = df['basicLowerband']
+        base_df['atr'] = df['atr']
+
+        return base_df
 
     def calculate_rsi(self, df, periods=[7, 14]):
         for period in periods:
@@ -155,6 +172,38 @@ class BingXChart:
         df['R2'] = df['Pivot'] + (df['high'].shift(1) - df['low'].shift(1))
         df['S2'] = df['Pivot'] - (df['high'].shift(1) - df['low'].shift(1))
         return df
+
+    def calculate_profit_long(self, initial_margin, entry_price, exit_price, leverage=25):
+        """
+        Рассчитывает прибыль для лонг позиции с заданным кредитным плечом.
+
+        initial_margin : float : начальный капитал (маржа)
+        entry_price    : float : цена входа в позицию
+        exit_price     : float : цена закрытия позиции
+        leverage       : int   : кредитное плечо (по умолчанию x25)
+        """
+        # Вычисление изменения цены
+        price_change_percent = ((exit_price - entry_price) / entry_price) * 100
+        # Вычисление прибыли с учетом плеча
+        profit_percent = price_change_percent * leverage
+        profit = (profit_percent / 100) * initial_margin
+        return profit
+
+    def calculate_profit_short(self, initial_margin, entry_price, exit_price, leverage=25):
+        """
+        Рассчитывает прибыль для шорт позиции с заданным кредитным плечом.
+
+        initial_margin : float : начальный капитал (маржа)
+        entry_price    : float : цена входа в позицию
+        exit_price     : float : цена закрытия позиции
+        leverage       : int   : кредитное плечо (по умолчанию x25)
+        """
+        # Вычисление изменения цены для шорт позиции (обратное изменение цены)
+        price_change_percent = ((entry_price - exit_price) / entry_price) * 100
+        # Вычисление прибыли с учетом плеча
+        profit_percent = price_change_percent * leverage
+        profit = (profit_percent / 100) * initial_margin
+        return profit
 
     def analyze_indicators(self, df):
         analysis = []
@@ -260,6 +309,7 @@ class BingXChart:
             'adl': self.last_analytics.get('adl', 0),
             'pivot': self.last_analytics.get('pivot', 0)
         }
+        comment = ""
 
         total_indicators = len(indicators)
 
@@ -275,20 +325,26 @@ class BingXChart:
         if long_probability >= 80:
             direction = "LONG"
             entry_point = df['close'].iloc[-1]
-            take_profit = entry_point + 2 * self.last_analytics['atr']  # ATR для take-profit
-            stop_loss = entry_point - 1.5 * self.last_analytics['atr']  # ATR для stop-loss
+            take_profit = entry_point + 0.1 * self.last_analytics['atr']  # ATR для take-profit
+            stop_loss = entry_point - 1 * self.last_analytics['atr']  # ATR для stop-loss
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
+            profit_long = int(self.calculate_profit_long(100, entry_point, stop_loss))
+            comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} c {profit_long}% выгодой"
         elif short_probability >= 80:
             direction = "SHORT"
             entry_point = df['close'].iloc[-1]
-            take_profit = entry_point - 2 * self.last_analytics['atr']
-            stop_loss = entry_point + 1.5 * self.last_analytics['atr']
+            take_profit = entry_point - 0.1 * self.last_analytics['atr']
+            stop_loss = entry_point + 1 * self.last_analytics['atr']
             probability = short_probability - 10
+            profit_short = int(self.calculate_profit_short(100, entry_point, take_profit))
+            comment += f"{short_count} индикаторов из {total_indicators} указывают на {direction} c {profit_short}% выгодой"
+
         else:
             return None  # Если условия не выполнены, сигнал не создается
 
         # Формируем сигнал
         signal = {
+            "comment": comment,
             "монета": symbol,
             "направление": direction,
             "точка входа": entry_point,
@@ -297,84 +353,6 @@ class BingXChart:
             "вероятность отработки": f"{probability}%"
         }
         return signal
-    def plot_chart(self, df, symbol):
-        fig, axs = plt.subplots(5, 1, figsize=(10, 15))
-
-        # График EMA
-        axs[0].plot(df['close'], label='Цена закрытия', color='blue')
-        axs[0].plot(df['EMA_9'], label='EMA 9', color='green')
-        axs[0].plot(df['EMA_21'], label='EMA 21', color='red')
-        axs[0].set_title(f'График цены с EMA для {symbol}')
-        axs[0].legend()
-
-        # Добавить анализ EMA на график
-        ema_analysis = self.analyze_indicators(df)[0]
-        axs[0].text(0.02, 0.95, ema_analysis, transform=axs[0].transAxes, fontsize=10, color='green', va='top')
-
-        # График Supertrend
-        axs[1].plot(df['close'], label='Цена закрытия', color='blue')
-        axs[1].plot(df['Supertrend'], label='Supertrend', color='orange')
-        axs[1].set_title(f'График цены с Supertrend для {symbol}')
-        axs[1].legend()
-
-        # Добавить анализ Supertrend на график
-        supertrend_analysis = self.analyze_indicators(df)[1]
-        axs[1].text(0.02, 0.95, supertrend_analysis, transform=axs[1].transAxes, fontsize=10, color='orange', va='top')
-
-        # График MACD
-        axs[2].plot(df['MACD'], label='MACD', color='blue')
-        axs[2].plot(df['MACD_Signal'], label='Сигнальная линия MACD', color='red')
-        axs[2].set_title(f'График MACD для {symbol}')
-        axs[2].legend()
-
-        # Добавить анализ MACD на график
-        macd_analysis = self.analyze_indicators(df)[2]
-        axs[2].text(0.02, 0.95, macd_analysis, transform=axs[2].transAxes, fontsize=10, color='blue', va='top')
-
-        # График RSI
-        axs[3].plot(df['RSI_14'], label='RSI 14', color='purple')
-        axs[3].set_title(f'График RSI для {symbol}')
-        axs[3].legend()
-
-        # Добавить анализ RSI на график
-        rsi_analysis = self.analyze_indicators(df)[3]
-        axs[3].text(0.02, 0.95, rsi_analysis, transform=axs[3].transAxes, fontsize=10, color='purple', va='top')
-
-        # График стохастического осциллятора
-        axs[4].plot(df['%K'], label='%K', color='blue')
-        axs[4].plot(df['%D'], label='%D', color='red')
-        axs[4].set_title(f'График стохастического осциллятора для {symbol}')
-        axs[4].legend()
-
-        # Добавить анализ стохастика на график
-        stochastic_analysis = self.analyze_indicators(df)[4]
-        axs[4].text(0.02, 0.95, stochastic_analysis, transform=axs[4].transAxes, fontsize=10, color='blue', va='top')
-
-        plt.tight_layout()
-        plt.show()
-
-    def generate_chart(self, symbol, hours_ago=24):
-        try:
-            if not self.interval:
-                raise ValueError(
-                    "Пожалуйста, используйте метод set_interval(interval), чтобы задать интервал перед генерацией графика.")
-            print(f"Генерация графика для {symbol}...")
-            klines = self.fetch_data(symbol, hours_ago)
-            df = self.create_dataframe(klines)
-            df = self.calculate_ema(df)
-            df = self.calculate_macd(df)
-            df = self.calculate_supertrend(df)
-            df = self.calculate_rsi(df)
-            df = self.calculate_stochastic(df)
-
-            # Провести анализ индикаторов
-            analysis_results = self.analyze_indicators(df)
-            for result in analysis_results:
-                print(result)  # Вывод анализа в консоль или запись в файл, если требуется
-
-            self.plot_chart(df, symbol)
-        except ValueError as e:
-            print(e)
 
     def generate_analytics(self, symbol, hours_ago=24):
         try:
@@ -385,6 +363,7 @@ class BingXChart:
                     "Пожалуйста, используйте метод set_interval(interval), чтобы задать интервал перед генерацией графика.")
             klines = self.fetch_data(symbol, hours_ago)
             df = self.create_dataframe(klines)
+
             df = self.calculate_ema(df)
             df = self.calculate_macd(df)
             df = self.calculate_supertrend(df)
@@ -394,6 +373,8 @@ class BingXChart:
             df = self.calculate_obv(df)
             df = self.calculate_adl(df)
             df = self.calculate_pivot_points(df)
+
+            self.df = df
 
             # Провести анализ индикаторов
             analysis_results = self.analyze_indicators(df)
@@ -406,25 +387,5 @@ class BingXChart:
                 "logic": self.last_analytics,
                 "trade_signal": trade_signal  # возвращаем сигнал
             }
-        except ValueError as e:
-            print(e)
-
-    def generate_all_charts(self, hours_ago=24):
-        try:
-            symbols = self.fetch_symbols()
-            if not self.interval:
-                raise ValueError(
-                    "Пожалуйста, используйте метод set_interval(interval), чтобы задать интервал перед генерацией графиков.")
-            for symbol in symbols:
-                print(f"Генерация графика для {symbol}...")
-                time.sleep(2)
-                klines = self.fetch_data(symbol, hours_ago)
-                df = self.create_dataframe(klines)
-                df = self.calculate_ema(df)
-                df = self.calculate_macd(df)
-                df = self.calculate_supertrend(df)
-                df = self.calculate_rsi(df)
-                df = self.calculate_stochastic(df)
-                self.plot_chart(df, symbol)
         except ValueError as e:
             print(e)

@@ -55,6 +55,7 @@ class Command(BaseCommand):
                 message += (f"точка входа: {float(signal['trade_signal']['точка входа'])} \n"
                             f"тейк поинт: {float(signal['trade_signal']['тейк поинт'])} \n"
                             f"стоп-лосс: {float(signal['trade_signal']['стоп-лосс'])} \n")
+                message += f"Коментарий от системы: \n {signal['trade_signal']['comment']} \n"
                 message += "✅✅✅✅✅СИГНАЛ ОТ СИСТЕМЫ✅✅✅✅✅"
                 messages.append(message)
 
