@@ -60,7 +60,8 @@ class BingXChart:
         df['MACD_Signal'] = df['MACD'].ewm(span=signal_period, adjust=False).mean()
         return df
 
-    def calculate_supertrend(self, df, period=7, multiplier=3):
+    def calculate_supertrend(self, base_df, period=7, multiplier=3):
+        df = base_df.copy()
         # Расчет ATR вручную вместо использования pandas_ta
         df['TR'] = np.maximum(df['high'] - df['low'],
                               np.maximum(abs(df['high'] - df['close'].shift(1)),
@@ -110,7 +111,14 @@ class BingXChart:
             else:
                 df.at[df.index[current], 'Supertrend'] = df['upperBand'].iloc[current]
 
-        return df
+        base_df['Supertrend'] = df['Supertrend']
+        base_df['upperBand'] = df['upperBand']
+        base_df['lowerBand'] = df['lowerBand']
+        base_df['basicUpperband'] = df['basicUpperband']
+        base_df['basicLowerband'] = df['basicLowerband']
+        base_df['atr'] = df['atr']
+
+        return base_df
 
     def calculate_rsi(self, df, periods=[7, 14]):
         for period in periods:
