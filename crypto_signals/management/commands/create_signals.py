@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
             for symbol in symbols:
                 try:
-                    dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=24)
+                    dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
                 except BaseException as e:
                     print(e)
                     continue
