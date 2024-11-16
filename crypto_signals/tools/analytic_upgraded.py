@@ -27,7 +27,7 @@ class BingXChart:
     def set_interval(self, interval):
         self.interval = interval
 
-    def fetch_data(self, symbol, hours_ago=24):
+    def fetch_data(self, symbol, hours_ago=25):
         if self.test_mode:
             hours_ago += self.past_hour
 
@@ -53,8 +53,9 @@ class BingXChart:
         df['time'] = pd.to_datetime(df['time'], unit='ms')
         df.set_index('time', inplace=True)
         df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
+        df = df.iloc[0:]
         if self.test_mode:
-            df = df.iloc[self.past_hour:]
+            df = df.iloc[self.past_hour-1:]
         df = df.iloc[::-1]
         return df
 
@@ -69,7 +70,7 @@ class BingXChart:
         df['MACD_Signal'] = df['MACD'].ewm(span=signal_period, adjust=False).mean()
         return df
 
-    def calculate_supertrend(self, base_df, period=10, multiplier=3):
+    def calculate_supertrend(self, base_df, period=7, multiplier=3):
         df = base_df.copy()
         # Расчет ATR вручную вместо использования pandas_ta
         df['TR'] = np.maximum(df['high'] - df['low'],
@@ -328,7 +329,7 @@ class BingXChart:
             take_profit = entry_point + 0.1 * self.last_analytics['atr']  # ATR для take-profit
             stop_loss = entry_point - 1 * self.last_analytics['atr']  # ATR для stop-loss
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
-            profit_long = int(self.calculate_profit_long(100, entry_point, stop_loss))
+            profit_long = self.calculate_profit_long(100, entry_point, stop_loss)
             comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} c {profit_long}% выгодой"
         elif short_probability >= 80:
             direction = "SHORT"
@@ -336,7 +337,7 @@ class BingXChart:
             take_profit = entry_point - 0.1 * self.last_analytics['atr']
             stop_loss = entry_point + 1 * self.last_analytics['atr']
             probability = short_probability - 10
-            profit_short = int(self.calculate_profit_short(100, entry_point, take_profit))
+            profit_short = self.calculate_profit_short(100, entry_point, take_profit)
             comment += f"{short_count} индикаторов из {total_indicators} указывают на {direction} c {profit_short}% выгодой"
 
         else:
