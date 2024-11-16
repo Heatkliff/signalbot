@@ -15,6 +15,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Запуск задачи collect_and_send_signals..."))
         logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        time.sleep(1)
 
         async def async_collect_and_send():
             signals = []
