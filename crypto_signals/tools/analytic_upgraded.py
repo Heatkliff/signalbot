@@ -349,9 +349,9 @@ class BingXChart:
             entry_point = df['close'].iloc[-1]
             take_profit = self.calculate_target_price(entry_point, 25, 15, "LONG")
             stop_loss_60 = df['low'].iloc[-1]
-            stop_loss_high = self.calculate_target_price(entry_point, 25, 60, "SHORT")
-            if stop_loss_high > stop_loss_60:
-                stop_loss = stop_loss_high
+            stop_loss_low = self.calculate_target_price(entry_point, 25, 60, "SHORT")
+            if stop_loss_low < stop_loss_60:
+                stop_loss = stop_loss_low
             else:
                 stop_loss = stop_loss_60
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
