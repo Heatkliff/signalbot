@@ -3,13 +3,14 @@ import logging
 from crypto_signals.tools.analytic_upgraded import BingXChart
 from crypto_signals.tools.autotrade import BingXTradingBot
 from crypto_signals.models import TelegramConfig
-
+import time
 
 class Command(BaseCommand):
     help = 'Поиск новых сигналов и отправка их в группу'
 
     def handle(self, *args, **kwargs):
         self.stdout.write(self.style.SUCCESS("Запуск задачи collect_and_create_deals..."))
+        time.sleep(5)
         logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
         self.config = TelegramConfig.objects.first()
