@@ -8,6 +8,8 @@ class TelegramConfig(models.Model):
     admin_chat_id = models.IntegerField()
     token = models.CharField(max_length=255)
     chat_id = models.IntegerField()
+    api_key = models.CharField(max_length=255, default="")
+    secret_key = models.CharField(max_length=255, default="")
 
 
 class TelegramChannel(models.Model):
