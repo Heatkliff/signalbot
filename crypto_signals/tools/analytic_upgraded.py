@@ -55,7 +55,7 @@ class BingXChart:
         df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
         df = df.iloc[1:]
         if self.test_mode:
-            df = df.iloc[self.past_hour-1:]
+            df = df.iloc[self.past_hour - 1:]
         df = df.iloc[::-1]
         return df
 
@@ -298,6 +298,27 @@ class BingXChart:
 
         return analysis
 
+    def calculate_target_price(self, entry_price, leverage, target_profit_percent, position):
+        """
+        Вычисляет цену для достижения заданной прибыли при фьючерсной торговле.
+
+        :param entry_price: Начальная цена (вход)
+        :param leverage: Кредитное плечо (например, 25)
+        :param target_profit_percent: Желаемая прибыль в процентах (например, 15)
+        :param position: Тип позиции ("LONG" или "SHORT")
+        :return: Необходимая цена для достижения прибыли
+        """
+        if position == "LONG":
+            # Для позиции LONG цена должна вырасти
+            target_price = entry_price * (1 + (target_profit_percent / (leverage * 100)))
+        elif position == "SHORT":
+            # Для позиции SHORT цена должна снизиться
+            target_price = entry_price * (1 - (target_profit_percent / (leverage * 100)))
+        else:
+            raise ValueError("Position must be 'LONG' or 'SHORT'.")
+
+        return target_price
+
     def generate_trade_signal(self, symbol, df):
         # Подсчет количества индикаторов, подтверждающих лонг и шорт
         indicators = {
@@ -326,7 +347,7 @@ class BingXChart:
         if long_probability >= 80:
             direction = "LONG"
             entry_point = df['close'].iloc[-1]
-            take_profit = entry_point + 0.1 * self.last_analytics['atr']  # ATR для take-profit
+            take_profit = self.calculate_target_price(entry_point, 25, 15, "LONG")
             stop_loss = df['low'].iloc[-1]
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
             profit_long = self.calculate_profit_long(100, entry_point, stop_loss)
@@ -334,7 +355,7 @@ class BingXChart:
         elif short_probability >= 80:
             direction = "SHORT"
             entry_point = df['close'].iloc[-1]
-            take_profit = entry_point - 0.1 * self.last_analytics['atr']
+            take_profit = self.calculate_target_price(entry_point, 25, 15, "SHORT")
             stop_loss = df['high'].iloc[-1]
             probability = short_probability - 10
             profit_short = self.calculate_profit_short(100, entry_point, take_profit)
