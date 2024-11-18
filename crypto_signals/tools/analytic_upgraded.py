@@ -53,7 +53,7 @@ class BingXChart:
         df['time'] = pd.to_datetime(df['time'], unit='ms')
         df.set_index('time', inplace=True)
         df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
-        df = df.iloc[0:]
+        df = df.iloc[1:]
         if self.test_mode:
             df = df.iloc[self.past_hour-1:]
         df = df.iloc[::-1]
@@ -327,7 +327,7 @@ class BingXChart:
             direction = "LONG"
             entry_point = df['close'].iloc[-1]
             take_profit = entry_point + 0.1 * self.last_analytics['atr']  # ATR для take-profit
-            stop_loss = entry_point - 1 * self.last_analytics['atr']  # ATR для stop-loss
+            stop_loss = df['low'].iloc[-1]
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
             profit_long = self.calculate_profit_long(100, entry_point, stop_loss)
             comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} c {profit_long}% выгодой"
@@ -335,7 +335,7 @@ class BingXChart:
             direction = "SHORT"
             entry_point = df['close'].iloc[-1]
             take_profit = entry_point - 0.1 * self.last_analytics['atr']
-            stop_loss = entry_point + 1 * self.last_analytics['atr']
+            stop_loss = df['high'].iloc[-1]
             probability = short_probability - 10
             profit_short = self.calculate_profit_short(100, entry_point, take_profit)
             comment += f"{short_count} индикаторов из {total_indicators} указывают на {direction} c {profit_short}% выгодой"
