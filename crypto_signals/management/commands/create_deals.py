@@ -55,14 +55,7 @@ class Command(BaseCommand):
                 else:
                     continue
             else:
-                self.create_deal(
-                    symbol=signal['trade_signal']['монета'],
-                    position=signal['trade_signal']['направление'],
-                    entry_price=float(signal['trade_signal']['точка входа']),
-                    take_profit=float(signal['trade_signal']['тейк поинт']),
-                    stop_loss=float(signal['trade_signal']['стоп-лосс'])
-                )
-                message += "⚠️⚠️⚠️СИГНАЛ НЕ СУЩЕСТВУЕТ НА 15m tf⚠️⚠️⚠️ \n"
+                continue
 
             message += (f"точка входа: {float(signal['trade_signal']['точка входа'])} \n"
                         f"тейк поинт: {float(signal['trade_signal']['тейк поинт'])} \n"
