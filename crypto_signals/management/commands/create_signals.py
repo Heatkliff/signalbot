@@ -48,9 +48,9 @@ class Command(BaseCommand):
                     if dict_analysis['trade_signal']['направление'] == signal['trade_signal']['направление']:
                         message += "✅✅✅СИГНАЛ СОВПАДАЕТ С 15m tf✅✅✅ \n"
                     else:
-                        message += "❌❌❌СИГНАЛ НЕ СОВПАДАЕТ С 15m tf❌❌❌ \n"
+                        continue
                 else:
-                    message += "⚠️⚠️⚠️СИГНАЛ НЕ СУЩЕСТВУЕТ НА 15m tf⚠️⚠️⚠️ \n"
+                    continue
 
                 message += (f"точка входа: {float(signal['trade_signal']['точка входа'])} \n"
                             f"тейк поинт: {float(signal['trade_signal']['тейк поинт'])} \n"
