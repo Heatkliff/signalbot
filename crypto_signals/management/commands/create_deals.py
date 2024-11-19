@@ -40,7 +40,7 @@ class Command(BaseCommand):
                         f"Направление: {signal['trade_signal']['направление']} \n"
                         f"Вероятность: {signal['trade_signal']['вероятность отработки']} \n")
 
-            dict_analysis = chart.generate_analytics(symbol=signal['trade_signal']['монета'], hours_ago=48)
+            dict_analysis = chart.generate_analytics(symbol=signal['trade_signal']['монета'], hours_ago=12)
 
             if dict_analysis['trade_signal'] is not None:
                 if dict_analysis['trade_signal']['направление'] == signal['trade_signal']['направление']:
@@ -48,27 +48,27 @@ class Command(BaseCommand):
                     self.create_deal(
                         symbol=signal['trade_signal']['монета'],
                         position=signal['trade_signal']['направление'],
-                        entry_price=float(signal['trade_signal']['точка входа']),
-                        take_profit=float(signal['trade_signal']['тейк поинт']),
-                        stop_loss=float(signal['trade_signal']['стоп-лосс'])
+                        entry_price=float(dict_analysis['trade_signal']['точка входа']),
+                        take_profit=float(dict_analysis['trade_signal']['тейк поинт']),
+                        stop_loss=float(dict_analysis['trade_signal']['стоп-лосс'])
                     )
                 else:
                     continue
             else:
                 continue
 
-            message += (f"точка входа: {float(signal['trade_signal']['точка входа'])} \n"
-                        f"тейк поинт: {float(signal['trade_signal']['тейк поинт'])} \n"
-                        f"стоп-лосс: {float(signal['trade_signal']['стоп-лосс'])} \n")
+            message += (f"точка входа: {float(dict_analysis['trade_signal']['точка входа'])} \n"
+                        f"тейк поинт: {float(dict_analysis['trade_signal']['тейк поинт'])} \n"
+                        f"стоп-лосс: {float(dict_analysis['trade_signal']['стоп-лосс'])} \n")
             message += f"Коментарий от системы: \n {signal['trade_signal']['comment']} \n"
             message += "✅✅✅✅✅СДЕЛКА СИСТЕМЫ✅✅✅✅✅"
             messages.append(message)
 
         if len(messages) > 0:
             for message in messages:
-                print(message)
+                logger.info(message)
         else:
-            print("Новых сделок в данный момент нет")
+            logger.info("Новых сделок в данный момент нет")
         logger.info("Задача collect_and_create_deals выполнена")
 
     def create_deal(self, symbol, position, entry_price, take_profit, stop_loss):

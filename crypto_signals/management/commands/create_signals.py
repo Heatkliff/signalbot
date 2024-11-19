@@ -42,7 +42,7 @@ class Command(BaseCommand):
                             f"Направление: {signal['trade_signal']['направление']} \n"
                             f"Вероятность: {signal['trade_signal']['вероятность отработки']} \n")
 
-                dict_analysis = chart.generate_analytics(symbol=signal['trade_signal']['монета'], hours_ago=48)
+                dict_analysis = chart.generate_analytics(symbol=signal['trade_signal']['монета'], hours_ago=12)
 
                 if dict_analysis['trade_signal'] is not None:
                     if dict_analysis['trade_signal']['направление'] == signal['trade_signal']['направление']:
@@ -52,9 +52,9 @@ class Command(BaseCommand):
                 else:
                     continue
 
-                message += (f"точка входа: {float(signal['trade_signal']['точка входа'])} \n"
-                            f"тейк поинт: {float(signal['trade_signal']['тейк поинт'])} \n"
-                            f"стоп-лосс: {float(signal['trade_signal']['стоп-лосс'])} \n")
+                message += (f"точка входа: {float(dict_analysis['trade_signal']['точка входа'])} \n"
+                            f"тейк поинт: {float(dict_analysis['trade_signal']['тейк поинт'])} \n"
+                            f"стоп-лосс: {float(dict_analysis['trade_signal']['стоп-лосс'])} \n")
                 message += f"Коментарий от системы: \n {signal['trade_signal']['comment']} \n"
                 message += "✅✅✅✅✅СИГНАЛ ОТ СИСТЕМЫ✅✅✅✅✅"
                 messages.append(message)
