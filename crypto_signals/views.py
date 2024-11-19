@@ -3,7 +3,8 @@ from .models import SentMessage, DataCollectionLog, MarketAnalysis
 from datetime import datetime
 from django.http import JsonResponse, HttpResponse
 from crypto_signals.tools.analytics import BingXChart
-from crypto_signals.tools.web_tools import price_direction
+from crypto_signals.tools.analytic_upgraded import BingXChart as BingXChartUpgrade
+from crypto_signals.tools.web_tools import price_direction, price_direction_upgrade
 from django.utils import timezone
 from django.core.cache import cache
 from django.http import HttpResponseForbidden
@@ -88,7 +89,7 @@ def market_analysis_view(request):
 def get_market_currency_info(request, currency):
     result = {}
     symbol = currency.upper()
-    chart = BingXChart()
+    chart = BingXChartUpgrade()
     symbols = chart.fetch_symbols()
     if symbol in symbols:
         result['symbol'] = symbol.replace('-', '')
@@ -97,13 +98,13 @@ def get_market_currency_info(request, currency):
         dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
         result['text'] = dict_analysis['text']
         result['logic'] = dict_analysis['logic']
-        result['analysis'] = price_direction(dict_analysis['logic'])
+        result['analysis'] = price_direction_upgrade(dict_analysis['logic'])
 
         chart.set_interval(interval='1h')
         dict_analysis_hour = chart.generate_analytics(symbol=symbol, hours_ago=48)
         result['text_h'] = dict_analysis_hour['text']
         result['logic_h'] = dict_analysis_hour['logic']
-        result['analysis_1h'] = price_direction(dict_analysis_hour['logic'])
+        result['analysis_1h'] = price_direction_upgrade(dict_analysis_hour['logic'])
 
         return render(request, 'info/single_analysis.html', result)
 

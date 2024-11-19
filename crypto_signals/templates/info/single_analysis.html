@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Крайние полученые сигналы
+    Анализ {{ symbol }}
 {% endblock %}
 
 {% block content %}
@@ -99,6 +99,42 @@
                             {% endif %}
                         </td>
                     </tr>
+                    <tr>
+                        <td>On Balance Volume</td>
+                        <td>
+                            {% if logic_h.obv == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.obv == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Advance–Decline line</td>
+                        <td>
+                            {% if logic_h.adl == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.adl == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pivot Points</td>
+                        <td>
+                            {% if logic_h.pivot == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic_h.pivot == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -183,6 +219,42 @@
                             {% if logic.stoch == 1 %}
                                 <span class="text-success">Восходящий тренд</span>
                             {% elif logic.stoch == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>On Balance Volume</td>
+                        <td>
+                            {% if logic.obv == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.obv == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Advance–Decline line</td>
+                        <td>
+                            {% if logic.adl == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.adl == -1 %}
+                                <span class="text-danger">Нисходящий тренд</span>
+                            {% else %}
+                                <span class="text-warning">Боковое движение</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pivot Points</td>
+                        <td>
+                            {% if logic.pivot == 1 %}
+                                <span class="text-success">Восходящий тренд</span>
+                            {% elif logic.pivot == -1 %}
                                 <span class="text-danger">Нисходящий тренд</span>
                             {% else %}
                                 <span class="text-warning">Боковое движение</span>
