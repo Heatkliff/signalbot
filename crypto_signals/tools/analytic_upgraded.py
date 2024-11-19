@@ -346,10 +346,10 @@ class BingXChart:
         # Условия для генерации сигнала с вероятностью >= 70%
         if long_probability >= 80:
             direction = "LONG"
-            entry_point = df['close'].iloc[-1]
-            take_profit = self.calculate_target_price(entry_point, 25, 15, "LONG")
+            entry_point = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
+            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 10, "LONG")
             stop_loss_60 = df['low'].iloc[-1]
-            stop_loss_low = self.calculate_target_price(entry_point, 25, 60, "SHORT")
+            stop_loss_low = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
             if stop_loss_low < stop_loss_60:
                 stop_loss = stop_loss_low
             else:
@@ -359,10 +359,10 @@ class BingXChart:
             comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} c {profit_long}% выгодой"
         elif short_probability >= 80:
             direction = "SHORT"
-            entry_point = df['close'].iloc[-1]
-            take_profit = self.calculate_target_price(entry_point, 25, 15, "SHORT")
+            entry_point = self.calculate_target_price(df['close'].iloc[-1], 25, 5, "LONG")
+            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 10, "SHORT")
             stop_loss_high = df['high'].iloc[-1]
-            stop_loss_60 = self.calculate_target_price(entry_point, 25, 60, "LONG")
+            stop_loss_60 = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "LONG")
             if stop_loss_high > stop_loss_60:
                 stop_loss = stop_loss_high
             else:
