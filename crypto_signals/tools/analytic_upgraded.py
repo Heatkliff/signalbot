@@ -347,7 +347,7 @@ class BingXChart:
         if long_probability >= 80:
             direction = "LONG"
             entry_point = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
-            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 10, "LONG")
+            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 15, "LONG")
             stop_loss_60 = df['low'].iloc[-1]
             stop_loss_low = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
             if stop_loss_low < stop_loss_60:
@@ -360,7 +360,7 @@ class BingXChart:
         elif short_probability >= 80:
             direction = "SHORT"
             entry_point = self.calculate_target_price(df['close'].iloc[-1], 25, 5, "LONG")
-            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 10, "SHORT")
+            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 15, "SHORT")
             stop_loss_high = df['high'].iloc[-1]
             stop_loss_60 = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "LONG")
             if stop_loss_high > stop_loss_60:
