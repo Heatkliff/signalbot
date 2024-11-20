@@ -65,8 +65,6 @@ class Command(BaseCommand):
                 for message in messages:
                     await bot.send_message(message)
                     time.sleep(2)
-            else:
-                await bot.send_message("Новых сигналов в данный момент нет")
 
         loop = asyncio.new_event_loop()
         loop.run_until_complete(async_collect_and_send())
