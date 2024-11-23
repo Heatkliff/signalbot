@@ -347,26 +347,26 @@ class BingXChart:
         if long_probability >= 80:
             direction = "LONG"
             entry_point = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
-            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 15, "LONG")
-            stop_loss_60 = df['low'].iloc[-1]
-            stop_loss_low = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
-            if stop_loss_low < stop_loss_60:
-                stop_loss = stop_loss_low
-            else:
-                stop_loss = stop_loss_60
+            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 20, "LONG")
+            stop_loss = df['low'].iloc[-1]
+            # stop_loss_low = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "SHORT")
+            # if stop_loss_low < stop_loss_60:
+            #     stop_loss = stop_loss_low
+            # else:
+            #     stop_loss = stop_loss_60
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
             profit_long = self.calculate_profit_long(100, entry_point, stop_loss)
             comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} c {profit_long}% выгодой"
         elif short_probability >= 80:
             direction = "SHORT"
             entry_point = self.calculate_target_price(df['close'].iloc[-1], 25, 5, "LONG")
-            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 15, "SHORT")
-            stop_loss_high = df['high'].iloc[-1]
-            stop_loss_60 = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "LONG")
-            if stop_loss_high > stop_loss_60:
-                stop_loss = stop_loss_high
-            else:
-                stop_loss = stop_loss_60
+            take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 20, "SHORT")
+            stop_loss = df['high'].iloc[-1]
+            # stop_loss_60 = self.calculate_target_price(df['close'].iloc[-1], 25, 60, "LONG")
+            # if stop_loss_high > stop_loss_60:
+            #     stop_loss = stop_loss_high
+            # else:
+            #     stop_loss = stop_loss_60
             probability = short_probability - 10
             profit_short = self.calculate_profit_short(100, entry_point, take_profit)
             comment += f"{short_count} индикаторов из {total_indicators} указывают на {direction} c {profit_short}% выгодой"
