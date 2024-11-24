@@ -4,12 +4,16 @@ from crypto_signals.models import HistorySignal, TelegramConfig
 from datetime import datetime, timedelta
 from crypto_signals.tools.autotrade import BingXTradingBot
 
+import time
+
 
 # Management команда для заполнения данных
 class Command(BaseCommand):
     help = 'Collects market analysis data and stores it in the database'
 
     def handle(self, *args, **kwargs):
+        self.stdout.write(self.style.SUCCESS('Waiting 3 seconds'))
+        time.sleep(3)
         self.stdout.write(self.style.SUCCESS('Successfully started 15m signals data'))
         self.config = TelegramConfig.objects.first()
 
