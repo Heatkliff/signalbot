@@ -3,7 +3,9 @@ from crypto_signals.tools.analytic_upgraded import BingXChart
 from crypto_signals.models import HistorySignal, TelegramConfig
 from datetime import datetime, timedelta
 from crypto_signals.tools.autotrade import BingXTradingBot
+from crypto_signals.tools.sender import SignalBot
 
+import asyncio
 import time
 
 
@@ -53,8 +55,29 @@ class Command(BaseCommand):
                             print(f"ERROR {e}")
             if len(fftm_signals) == 0:
                 print("Without signals")
+            else:
+                messages = []
+                for fftm_signal in fftm_signals:
+                    message = (f"✅✅✅СДЕЛКА СИСТЕМЫ✅✅✅\n"
+                               f"Пара: {fftm_signal.symbol} \n"
+                               f"Направление: {fftm_signal.position} \n"
+                               f"точка входа: {fftm_signal.entry} \n"
+                               f"тейк поинт: {fftm_signal.take} \n"
+                               f"стоп-лосс: {fftm_signal.stop} \n"
+                               f"Аналитика: http://crypto-alien-bot.pp.ua/status_market/{fftm_signal.symbol} \n"
+                               "✅✅✅✅✅СДЕЛКА СИСТЕМЫ✅✅✅✅✅")
+                    messages.append(message)
+                loop = asyncio.new_event_loop()
+                loop.run_until_complete(self.async_send(messages))
 
         self.stdout.write(self.style.SUCCESS('Successfully added 15m signals data'))
+
+    async def async_send(self, messages):
+        bot = SignalBot(config=self.config)
+        if len(messages) > 0:
+            for message in messages:
+                await bot.send_message(message)
+                time.sleep(1)
 
     def create_deal(self, symbol, position, entry_price, take_profit, stop_loss):
         api_key = self.config.api_key
