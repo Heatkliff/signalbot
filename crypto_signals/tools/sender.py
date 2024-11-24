@@ -66,7 +66,5 @@ class SignalBot:
                     new_text += (f"Сообщение трейдера: \n {message[1]}\n"
                                  f"Открыть сделку {features_link} \n")
                     await self.bot.send_message(chat_id=self.chat_id, text=new_text, parse_mode='HTML')
-                    await SentMessage.objects.acreate(message_text=message[1], trader_name={message[0]})
                 else:
                     await self.bot.send_message(chat_id=self.chat_id, text=text, parse_mode='HTML')
-                    await SentMessage.objects.acreate(message_text=message[1], trader_name={message[0]})
