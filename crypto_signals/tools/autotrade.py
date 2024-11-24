@@ -60,7 +60,6 @@ class BingXTradingBot:
             "side": side,
             "positionSide": position_side,
             "type": order_type,
-            "quantity": quantity,
             "leverage": leverage,
             "timestamp": int(time.time() * 1000),
         }
@@ -73,8 +72,8 @@ class BingXTradingBot:
         # Для лимитного ордера добавляем entry_price
         if order_type == "LIMIT" and entry_price:
             params["price"] = entry_price
-            quantity_real = (quantity * leverage) / entry_price
-            params['quantity'] = quantity_real
+        quantity_real = (quantity * leverage) / entry_price
+        params['quantity'] = quantity_real
 
         # Добавляем тейк-профит и стоп-лосс в формате JSON строки
         if take_profit:
