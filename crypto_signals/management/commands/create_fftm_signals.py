@@ -68,7 +68,7 @@ class Command(BaseCommand):
                 side="BUY",
                 position_side=position,
                 order_type="MARKET",
-                quantity=2,
+                quantity=1,
                 entry_price=entry_price,
                 take_profit=take_profit,
                 stop_loss=stop_loss,
