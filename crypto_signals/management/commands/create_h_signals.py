@@ -13,9 +13,6 @@ class Command(BaseCommand):
         chart = BingXChart()
         symbols = chart.fetch_symbols()
         chart.set_interval(interval='1h')
-        # print(f"Доступные торговые пары: {', '.join(symbols)}")
-        # Задаем интервал для графиков
-        crypto_list = []
 
         for symbol in symbols:
             # Получаем данные аналитики
