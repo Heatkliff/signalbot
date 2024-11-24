@@ -10,6 +10,9 @@ class Command(BaseCommand):
     help = 'Collects market analysis data and stores it in the database'
 
     def handle(self, *args, **kwargs):
+        self.stdout.write(self.style.SUCCESS('Waiting 3 seconds'))
+        time.sleep(3)
+        self.stdout.write(self.style.SUCCESS('Successfully started 1h signals data'))
         chart = BingXChart()
         symbols = chart.fetch_symbols()
         chart.set_interval(interval='1h')
