@@ -53,8 +53,8 @@ class Command(BaseCommand):
         interval_seconds = interval_minutes * 60
         # Преобразуем время в секунды с начала дня
         seconds_since_midnight = past_time.hour * 3600 + past_time.minute * 60 + past_time.second
-        # Округляем секунды до ближайшего интервала
-        rounded_seconds = round(seconds_since_midnight / interval_seconds) * interval_seconds
+        # Округляем секунды вниз до ближайшего интервала
+        rounded_seconds = (seconds_since_midnight // interval_seconds) * interval_seconds
         # Получаем округлённое время
         rounded_time = past_time.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(
             seconds=rounded_seconds)
