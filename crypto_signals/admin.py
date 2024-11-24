@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from .models import TelegramConfig, TelegramChannel, SentMessage, Signal
-from .models import DataCollectionLog, MarketAnalysis
+from .models import DataCollectionLog, MarketAnalysis, HistorySignal
 
 
 @admin.register(DataCollectionLog)
@@ -27,11 +27,13 @@ class TelegramChannelAdmin(admin.ModelAdmin):
 class SentMessageAdmin(admin.ModelAdmin):
     list_display = ('trader_name', 'message_text', 'timestamp')
 
+
 @admin.register(Signal)
 class SignalAdmin(admin.ModelAdmin):
     list_display = ('currency', 'direction', 'entry', 'timestamp')  # Отображение полей в админке
     search_fields = ('currency', 'direction')  # Возможность поиска по валюте и направлению
     list_filter = ('currency', 'direction', 'timestamp')  # Фильтры для удобства работы
+
 
 # Добавляем модель в админку
 @admin.register(MarketAnalysis)
@@ -39,3 +41,8 @@ class MarketAnalysisAdmin(admin.ModelAdmin):
     list_display = ('time',)
     search_fields = ('time',)
 
+
+@admin.register(HistorySignal)
+class HistorySignalsAdmin(admin.ModelAdmin):
+    list_display = ('timestamp', 'symbol', 'position')
+    search_fields = ('time',)

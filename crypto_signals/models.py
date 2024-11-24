@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 
 class TelegramConfig(models.Model):
@@ -61,3 +62,37 @@ class MarketAnalysis(models.Model):
 
     def __str__(self):
         return f"Market Analysis at {self.time}"
+
+
+class HistorySignal(models.Model):
+    OPTION_ONE = '1h'
+    OPTION_TWO = '15m'
+    OPTION_THREE = '5m'
+    OPTIONS = [
+        (OPTION_ONE, '1h tf signal'),
+        (OPTION_TWO, '15m tf signal'),
+        (OPTION_THREE, '5m tf signal'),
+    ]
+
+    type_signal = models.CharField(
+        max_length=20,  # Максимальная длина строки
+        choices=OPTIONS,  # Указываем варианты
+        default=OPTION_ONE,  # Значение по умолчанию
+    )
+    symbol = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    entry = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)
+    take = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)
+    stop = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['symbol', 'type_signal', 'timestamp'],
+                name='unique_symbol_type_timestamp'
+            )
+        ]
+
+    def __str__(self):
+        return f"Signal for {self.symbol} at {self.timestamp.strftime('%H:%M')} on {self.type_signal}"
