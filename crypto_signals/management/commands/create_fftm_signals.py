@@ -10,6 +10,7 @@ class Command(BaseCommand):
     help = 'Collects market analysis data and stores it in the database'
 
     def handle(self, *args, **kwargs):
+        self.stdout.write(self.style.SUCCESS('Successfully started 15m signals data'))
         self.config = TelegramConfig.objects.first()
 
         need_ts = self.round_past_time_to_nearest_interval(0, 60)
@@ -49,7 +50,7 @@ class Command(BaseCommand):
             if len(fftm_signals) == 0:
                 print("Without signals")
 
-        self.stdout.write(self.style.SUCCESS('Successfully added 1h signals data'))
+        self.stdout.write(self.style.SUCCESS('Successfully added 15m signals data'))
 
     def create_deal(self, symbol, position, entry_price, take_profit, stop_loss):
         api_key = self.config.api_key
