@@ -83,8 +83,8 @@ class Command(BaseCommand):
                 side="BUY",
                 position_side=position,
                 order_type="MARKET",
-                quantity=1,
-                entry_price=None,  # Оставляем None для рыночного ордера
+                quantity=2,
+                entry_price=entry_price,
                 take_profit=take_profit,
                 stop_loss=stop_loss,
                 leverage=25,
