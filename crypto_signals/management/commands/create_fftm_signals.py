@@ -38,7 +38,7 @@ class Command(BaseCommand):
                                 entry=float(dict_analysis['trade_signal']['точка входа']),
                                 take=float(dict_analysis['trade_signal']['тейк поинт']),
                                 stop=float(dict_analysis['trade_signal']['стоп-лосс']),
-                                timestamp=self.round_past_time_to_nearest_interval(0, 60)
+                                timestamp=self.round_past_time_to_nearest_interval(0, 15)
                             )
                             current_signal.save()
 
