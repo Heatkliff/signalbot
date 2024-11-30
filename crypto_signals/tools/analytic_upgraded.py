@@ -392,13 +392,13 @@ class BingXChart:
 
             df = self.calculate_ema(df)
             df = self.calculate_macd(df)
-            df = self.calculate_supertrend(df, period=10, multiplier=3)
             df = self.calculate_rsi(df)
             df = self.calculate_stochastic(df)
             df = self.calculate_atr(df)
             df = self.calculate_obv(df)
             df = self.calculate_adl(df)
             df = self.calculate_pivot_points(df)
+            df = self.calculate_supertrend(df, period=10, multiplier=3)
 
             self.df = df
 
