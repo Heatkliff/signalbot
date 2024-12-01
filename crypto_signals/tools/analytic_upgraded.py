@@ -366,16 +366,14 @@ class BingXChart:
             take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 20, "LONG")
             stop_loss = df['low'].iloc[-1]
             probability = long_probability - 10  # Вероятность отработки сигнала с учетом поправки
-            profit_long = self.calculate_profit_long(100, entry_point, stop_loss)
-            comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} c {profit_long}% выгодой"
+            comment += f"{long_count} индикаторов из {total_indicators} указывают на {direction} "
         elif short_probability >= 80:
             direction = "SHORT"
             entry_point = df['close'].iloc[-1]
             take_profit = self.calculate_target_price(df['close'].iloc[-1], 25, 20, "SHORT")
             stop_loss = df['high'].iloc[-1]
             probability = short_probability - 10
-            profit_short = self.calculate_profit_short(100, entry_point, take_profit)
-            comment += f"{short_count} индикаторов из {total_indicators} указывают на {direction} c {profit_short}% выгодой"
+            comment += f"{short_count} индикаторов из {total_indicators} указывают на {direction} "
 
         else:
             return None  # Если условия не выполнены, сигнал не создается
