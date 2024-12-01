@@ -22,13 +22,16 @@ class Command(BaseCommand):
             dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
             if dict_analysis['trade_signal'] is not None:
                 try:
+                    price_data = float(chart.get_current_price(symbol))
+                    tpls = self.remake_marks(dict_analysis['trade_signal']['направление'], price_data, chart)
+
                     current_signal = HistorySignal.objects.create(
                         symbol=symbol,
                         type_signal="1h",
                         position=dict_analysis['trade_signal']['направление'],
-                        entry=float(dict_analysis['trade_signal']['точка входа']),
-                        take=float(dict_analysis['trade_signal']['тейк поинт']),
-                        stop=float(dict_analysis['trade_signal']['стоп-лосс']),
+                        entry=price_data,
+                        take=tpls['tp'],
+                        stop=tpls['sl'],
                         timestamp=self.round_past_time_to_nearest_interval(0, 60)
                     )
                     current_signal.save()
@@ -36,6 +39,26 @@ class Command(BaseCommand):
                     print(f"ERROR {e}")
 
         self.stdout.write(self.style.SUCCESS('Successfully added 1h signals data'))
+
+    def remake_marks(self, direction, price, chart):
+        data = {}
+        if direction == "LONG":
+            entry_point = price
+            take_profit = chart.calculate_target_price(entry_point, 25, 20, "LONG")
+            stop_loss = chart.calculate_target_price(entry_point, 25, 60, "SHORT")
+            data = {
+                'tp': take_profit,
+                'sl': stop_loss,
+            }
+        elif direction == "SHORT":
+            entry_point = price
+            take_profit = chart.calculate_target_price(entry_point, 25, 20, "SHORT")
+            stop_loss = chart.calculate_target_price(entry_point, 25, 60, "LONG")
+            data = {
+                'tp': take_profit,
+                'sl': stop_loss,
+            }
+        return data
 
     def round_past_time_to_nearest_interval(self, minutes_ago, interval_minutes):
         """
