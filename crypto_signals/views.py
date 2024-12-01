@@ -95,7 +95,7 @@ def get_market_currency_info(request, currency):
         result['symbol'] = symbol.replace('-', '')
 
         chart.set_interval(interval='15m')
-        dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=48)
+        dict_analysis = chart.generate_analytics(symbol=symbol, hours_ago=12)
         result['text'] = dict_analysis['text']
         result['logic'] = dict_analysis['logic']
         result['analysis'] = price_direction_upgrade(dict_analysis['logic'])
