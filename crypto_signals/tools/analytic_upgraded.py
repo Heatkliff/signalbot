@@ -11,6 +11,7 @@ class BingXChart:
         self.start_time = 0
         self.symbols_url = 'https://open-api.bingx.com/openApi/swap/v2/quote/contracts'
         self.klines_url = 'https://open-api.bingx.com/openApi/swap/v3/quote/klines'
+        self.mprice_url = 'https://open-api.bingx.com/openApi/swap/v2/quote/premiumIndex'
         self.interval = None
         self.limit = 1000
         self.last_analytics = {}
@@ -23,6 +24,17 @@ class BingXChart:
             return [item['symbol'] for item in data['data'] if item['symbol'].endswith('USDT')]
         else:
             raise ValueError(f"Ошибка при получении списка торговых пар: {data['msg']}")
+
+    def get_current_price(self, symbol):
+        params = {
+            'symbol': symbol,
+        }
+        response = requests.get(self.mprice_url, params=params)
+        data = response.json()
+        if data['code'] == 0:
+            return data['data']['markPrice']
+        else:
+            raise ValueError(f"Ошибка при получении данных для {symbol}: {data['msg']}")
 
     def set_interval(self, interval):
         self.interval = interval
