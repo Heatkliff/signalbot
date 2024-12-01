@@ -31,28 +31,35 @@ class Command(BaseCommand):
                 if dict_analysis['trade_signal'] is not None:
                     if dict_analysis['trade_signal']['направление'] == signal.position:
                         try:
-                            current_signal = HistorySignal.objects.create(
-                                symbol=signal.symbol,
-                                type_signal="15m",
-                                position=dict_analysis['trade_signal']['направление'],
-                                entry=float(dict_analysis['trade_signal']['точка входа']),
-                                take=float(dict_analysis['trade_signal']['тейк поинт']),
-                                stop=float(dict_analysis['trade_signal']['стоп-лосс']),
-                                timestamp=self.round_past_time_to_nearest_interval(0, 15)
-                            )
-                            current_signal.save()
+
+                            price_data = float(chart.get_current_price(signal.symbol))
+                            if price_data > float(dict_analysis['trade_signal']['тейк поинт']):
+                                continue
+                            tpls = self.remake_marks(dict_analysis['trade_signal']['направление'], price_data, chart)
 
                             self.create_deal(
                                 symbol=dict_analysis['trade_signal']['монета'],
                                 position=dict_analysis['trade_signal']['направление'],
-                                entry_price=float(dict_analysis['trade_signal']['точка входа']),
-                                take_profit=float(dict_analysis['trade_signal']['тейк поинт']),
-                                stop_loss=float(dict_analysis['trade_signal']['стоп-лосс'])
+                                entry_price=price_data,
+                                take_profit=tpls['tp'],
+                                stop_loss=tpls['sl'],
                             )
+
+                            current_signal = HistorySignal.objects.create(
+                                symbol=signal.symbol,
+                                type_signal="15m",
+                                position=dict_analysis['trade_signal']['направление'],
+                                entry=price_data,
+                                take=tpls['tp'],
+                                stop=tpls['sl'],
+                                timestamp=self.round_past_time_to_nearest_interval(0, 15)
+                            )
+                            current_signal.save()
 
                             fftm_signals.append(current_signal)
                         except Exception as e:
                             print(f"ERROR {e}")
+
             if len(fftm_signals) == 0:
                 print("Without signals")
             else:
@@ -71,6 +78,26 @@ class Command(BaseCommand):
                 loop.run_until_complete(self.async_send(messages))
 
         self.stdout.write(self.style.SUCCESS('Successfully added 15m signals data'))
+
+    def remake_marks(self, direction, price, chart):
+        data = {}
+        if direction == "LONG":
+            entry_point = price
+            take_profit = chart.calculate_target_price(entry_point, 25, 20, "LONG")
+            stop_loss = chart.calculate_target_price(entry_point, 25, 60, "SHORT")
+            data = {
+                'tp': take_profit,
+                'sl': stop_loss,
+            }
+        elif direction == "SHORT":
+            entry_point = price
+            take_profit = chart.calculate_target_price(entry_point, 25, 20, "SHORT")
+            stop_loss = chart.calculate_target_price(entry_point, 25, 60, "LONG")
+            data = {
+                'tp': take_profit,
+                'sl': stop_loss,
+            }
+        return data
 
     async def async_send(self, messages):
         bot = SignalBot(config=self.config)
